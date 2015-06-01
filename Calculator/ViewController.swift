@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Alden Stradling. All rights reserved.
 //
 
-// Now I think I get it
+// Now I think I get it. Finishing.
 import UIKit
 
 class ViewController: UIViewController {
