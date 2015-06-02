@@ -13,17 +13,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
     
     var userIsInTheMiddleOfTypingANumber = false
+    var inputHasADecimal = false
 
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         println("digit = \(digit)")
-        if userIsInTheMiddleOfTypingANumber {
-            display.text = display.text! + digit
+        if digit == "." && inputHasADecimal {
+            // Do nothing. Disallowed.
         } else {
-            display.text =  digit
-            userIsInTheMiddleOfTypingANumber = true
+            if digit == "." { inputHasADecimal = true }
+            if userIsInTheMiddleOfTypingANumber {
+                display.text = display.text! + digit
+            } else {
+                display.text =  digit
+                userIsInTheMiddleOfTypingANumber = true
+            }
         }
-
     }
 
     @IBAction func Operate(sender: UIButton) {
@@ -37,6 +42,9 @@ class ViewController: UIViewController {
             case "+": performDualOperation {$0 + $1}
             case "−": performDualOperation {$1 - $0}
             case "√": performMonoOperation { sqrt($0)}
+            case "sin": performMonoOperation { sin($0) }
+            case "cos": performMonoOperation { cos($0) }
+            case "tan": performMonoOperation { tan($0) }
             default: break
         }
         
@@ -81,5 +89,5 @@ class ViewController: UIViewController {
 
 // Characters reference
 // +−÷×
-//→π√␡⏎±
+//→π√␡⏎± 🔙
 //sin cos tan
