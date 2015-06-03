@@ -21,12 +21,13 @@ extension String
 class ViewController: UIViewController {
 
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var operationsLogger: UILabel!
     
     var userIsInTheMiddleOfTypingANumber = false
     var inputHasADecimal = false
-    var knownNonNumericCharacters = "→π√␡⏎± 🔙+−÷×"
-    
+    var knownNonNumericCharacters = "→π√␡⏎± 🔙+−÷×e"
     var operandStack = Array<Double>()
+    var buttonPush = true
     
 
 
@@ -36,8 +37,19 @@ class ViewController: UIViewController {
         operandStack = Array<Double>()
         displayValue = 0
         display.text = "0"
+        operationsLogger.text = ""
     }
 
+    
+    @IBAction func deleteDigit() {
+        if userIsInTheMiddleOfTypingANumber {
+            if count(display.text!) >= 1 {
+                var lastcharIndex = advance(display.text!.endIndex, -1)
+                display.text = display.text!.substringToIndex(lastcharIndex)
+            }
+        }
+    }
+    
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         println("digit = \(digit)")
@@ -57,8 +69,11 @@ class ViewController: UIViewController {
     @IBAction func Operate(sender: UIButton) {
         let operation = sender.currentTitle!
         if userIsInTheMiddleOfTypingANumber{
+            buttonPush = false
             enter()
+            buttonPush = true
         }
+        operationsLogger.text = operationsLogger.text! + " \(operation) "
         switch operation {
             case "×": performBinaryOperation {$0 * $1}
             case "÷": performBinaryOperation {$1 / $0}
@@ -69,6 +84,7 @@ class ViewController: UIViewController {
             case "cos": performUnaryOperation { cos($0) }
             case "tan": performUnaryOperation { tan($0) }
             case "π": insertConstant(M_PI, visible: operation)
+            case "e": insertConstant(M_E, visible: operation)
             case "±": performUnaryOperation { -$0 }
             default: break
         }
@@ -103,13 +119,15 @@ class ViewController: UIViewController {
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
         operandStack.append(displayValue)
-        println("operandStack = \(operandStack)")
+        operationsLogger.text = operationsLogger.text! + " \(display.text!) "
+        if buttonPush == true { operationsLogger.text = operationsLogger.text! + " ⏎ " }
+        
+        
     }
-
-    
     
     var displayValue: Double {
         get {
+            if display.text! == "" { display.text! = "0" }
             var tempstring = display.text!
             for testcharacter in knownNonNumericCharacters {
                 while tempstring.indexOfCharacter(testcharacter).1 != nil {
