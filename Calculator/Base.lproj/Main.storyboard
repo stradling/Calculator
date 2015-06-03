@@ -271,6 +271,7 @@
                                 </state>
                                 <connections>
                                     <action selector="Operate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GNe-jx-4xt"/>
+                                    <action selector="clearCalculator" destination="BYZ-38-t0r" eventType="touchUpInside" id="EoG-rx-beq"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNr-Sn-Vis">

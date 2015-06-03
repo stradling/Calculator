@@ -25,6 +25,18 @@ class ViewController: UIViewController {
     var userIsInTheMiddleOfTypingANumber = false
     var inputHasADecimal = false
     var knownNonNumericCharacters = "→π√␡⏎± 🔙+−÷×"
+    
+    var operandStack = Array<Double>()
+    
+
+
+    @IBAction func clearCalculator() {
+        userIsInTheMiddleOfTypingANumber = false
+        inputHasADecimal = false
+        operandStack = Array<Double>()
+        displayValue = 0
+        display.text = "0"
+    }
 
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
@@ -88,8 +100,6 @@ class ViewController: UIViewController {
         
     }
 
-    var operandStack = Array<Double>()
-    
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
         operandStack.append(displayValue)
@@ -115,11 +125,3 @@ class ViewController: UIViewController {
     }
 }
 
-
-
-
-
-// Characters reference
-// +−÷×
-//→π√␡⏎± 🔙
-//sin cos tan
