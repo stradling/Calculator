@@ -8,12 +8,23 @@
 
 import UIKit
 
+extension String
+{
+    public func indexOfCharacter(char: Character) -> (Int?, String.Index?) {
+        if let idx = find(self, char) {
+            return (distance(self.startIndex, idx), idx)
+        }
+        return (nil,nil)
+    }
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var display: UILabel!
     
     var userIsInTheMiddleOfTypingANumber = false
     var inputHasADecimal = false
+    var knownNonNumericCharacters = "→π√␡⏎± 🔙+−÷×"
 
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
@@ -37,33 +48,46 @@ class ViewController: UIViewController {
             enter()
         }
         switch operation {
-            case "×": performDualOperation {$0 * $1}
-            case "÷": performDualOperation {$1 / $0}
-            case "+": performDualOperation {$0 + $1}
-            case "−": performDualOperation {$1 - $0}
-            case "√": performMonoOperation { sqrt($0)}
-            case "sin": performMonoOperation { sin($0) }
-            case "cos": performMonoOperation { cos($0) }
-            case "tan": performMonoOperation { tan($0) }
+            case "×": performBinaryOperation {$0 * $1}
+            case "÷": performBinaryOperation {$1 / $0}
+            case "+": performBinaryOperation {$0 + $1}
+            case "−": performBinaryOperation {$1 - $0}
+            case "√": performUnaryOperation { sqrt($0)}
+            case "sin": performUnaryOperation { sin($0) }
+            case "cos": performUnaryOperation { cos($0) }
+            case "tan": performUnaryOperation { tan($0) }
+            case "π": insertConstant(M_PI, visible: operation)
+            case "±": performUnaryOperation { -$0 }
             default: break
         }
         
     }
    
-    func performDualOperation(operation:(Double, Double) -> Double) {
+    func performBinaryOperation(operation:(Double, Double) -> Double) {
         if operandStack.count >= 2 {
             displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
             enter()
         }
     }
     
-    func performMonoOperation(operation:Double -> Double) {
+    func performUnaryOperation(operation:Double -> Double) {
         if operandStack.count >= 1 {
             displayValue = operation(operandStack.removeLast())
             enter()
         }
     }
     
+    func insertConstant(my_constant: Double, visible: String) {
+        userIsInTheMiddleOfTypingANumber = true
+        operandStack.append(my_constant)
+        if display.text != "0" {
+            display.text = display.text! + visible
+        } else {
+            display.text = visible
+        }
+        
+    }
+
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
@@ -71,10 +95,18 @@ class ViewController: UIViewController {
         operandStack.append(displayValue)
         println("operandStack = \(operandStack)")
     }
+
+    
     
     var displayValue: Double {
         get {
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            var tempstring = display.text!
+            for testcharacter in knownNonNumericCharacters {
+                while tempstring.indexOfCharacter(testcharacter).1 != nil {
+                    tempstring.removeAtIndex(tempstring.indexOfCharacter(testcharacter).1!)
+                }
+            }
+            return NSNumberFormatter().numberFromString(tempstring)!.doubleValue
         }
         set {
             display.text = "\(newValue)"
