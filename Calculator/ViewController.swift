@@ -31,7 +31,8 @@ class ViewController: UIViewController {
     var operandStack = Array<Double>()
     var buttonPush = true
     
-
+    //Why is this error type?
+    var brain = CalculatorBrain()
 
     @IBAction func clearCalculator() {
         userIsInTheMiddleOfTypingANumber = false
@@ -68,7 +69,7 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func Operate(sender: UIButton) {
+    @IBAction func operate(sender: UIButton) {
         let operation = sender.currentTitle!
         if userIsInTheMiddleOfTypingANumber{
             buttonPush = false
@@ -120,6 +121,11 @@ class ViewController: UIViewController {
 
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
+        //Failing here because brain is errortype
+        
+        if let result = brain.pushOperand(displayValue) {
+            displayValue = result
+        }
         operandStack.append(displayValue)
         operationsLogger.text = operationsLogger.text! + " \(display.text!) "
         if buttonPush == true { operationsLogger.text = operationsLogger.text! + " ⏎ " }
