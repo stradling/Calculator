@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Alden Stradling. All rights reserved.
 //
 
+// Completed assignment 1. Adapted to XCode 6.3 (Swift 1.2) by providing a Unary and Binary operator rather than overloading.
+
 import UIKit
 
 extension String
