@@ -19,7 +19,7 @@ class CalculatorBrain
     private var opStack = [Op]()
     private var knownOps = [String:Op]()
     
-    private init() {
+    init() {
         knownOps["×"] = Op.BinaryOperation("×", *)
         knownOps["÷"] = Op.BinaryOperation("÷") {$1 / $0}
         knownOps["+"] = Op.BinaryOperation("+", +)
